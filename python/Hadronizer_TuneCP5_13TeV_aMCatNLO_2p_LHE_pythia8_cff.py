@@ -1,4 +1,11 @@
 import FWCore.ParameterSet.Config as cms
+externalLHEProducer = cms.EDProducer("ExternalLHEProducer",
+    args = cms.vstring(''),
+    nEvents = cms.untracked.uint32(1000),
+    numberOfParameters = cms.uint32(1),
+    outputFile = cms.string('cmsgrid_final.lhe'),
+    scriptName = cms.FileInPath('GeneratorInterface/LHEInterface/data/run_generic_tarball_cvmfs.sh')
+)
 
 from Configuration.Generator.Pythia8CommonSettings_cfi import *
 from Configuration.Generator.MCTunes2017.PythiaCP5Settings_cfi import *
@@ -27,4 +34,4 @@ generator = cms.EDFilter("Pythia8HadronizerFilter",
                                     )
     )
 )
-
+ProductionFilterSequence = cms.Sequence(generator)
