@@ -25,7 +25,10 @@ generator = cms.EDFilter("Pythia8HadronizerFilter",
             'Higgs:useBSM = on',# allow BSM Higgs production
             '36:onMode = off' , # turn off all h3 decays
             '36:onIfAny = 5',   # turn on only h3 to b b~
-        
+            '36:isResonance = true',
+            '36:doForceWidth = on',
+            #'36:mWidth =0.01410862'
+            
             # the Z decay in the ME now !
             #'23:onMode = off' , # turn off all Z decays
             #'23:onIfAny = 11 13 15',  # turn on only decays Z to leptons
