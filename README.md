@@ -1,5 +1,5 @@
-# ZANanoGEN
-##Setup CMSSW area :
+# ZANanoGEN:
+## Setup CMSSW area :
 To set up in a new CMSSW area:
 ```bash
 cmsrel CMSSW_10_6_19_patch2
@@ -25,8 +25,8 @@ At this stage I am assuming that you manage to generate gridpacks stored by defa
 ```python
 python slurmOverallgridpacks.py --path --output
 ```
-``-p``/``--path`` : path to `` _tarball.tar.xz`` gridpacks
-``-o``/``--output``:  output dir 
+- ``-p``/``--path`` : path to `` _tarball.tar.xz`` gridpacks
+- ``-o``/``--output``:  output dir 
 ## LHE -> GEN:
 If you have lhe files:
 Go to folderName/Events/run_01. In there should be a file named unweighted_events.lhe.gz . To unzip it, use:
@@ -40,7 +40,16 @@ You should now have unweighted_events.lhe, which is the file to be used in furth
 ```
 where `<fragment>` is a fragment with an externalLHEProducer and hadronizer settings compatible with the process in the LHE file.
 
-##Useful Links:
+## Get gridpack and fragments for a dataset: [snippets/1488](https://gitlab.cern.ch/-/snippets/1488)
+```python
+python getGenInfo.py --cernSSOcookies=prodcookies.pkl /HToZATo2L2B_MH-500_MA-300_13TeV-madgraph-pythia8/RunIISummer16NanoAODv7-PUMoriond17_Nano02Apr2020_102X_mcRun2_asymptotic_v8-v1/NANOAODSIM
+```
+This (python3) script assumes you have a grid proxy (to query DAS) and kerberos token (to get a session cookie for McM - set up with kinit username@CERN.CH).
+It also depends on cerndb/cern-sso-python with a patch, which can be installed with
+```bash
+pip install git+https://github.com/pieterdavid/cern-sso-python.git@addverifyarg 
+```
+## Useful Links:
 - [NanoGen twiki page](https://twiki.cern.ch/twiki/bin/viewauth/CMS/NanoGen)
 - [Kenneth Long's repo](https://github.com/kdlong/WMassNanoGen) 
 - [Pieter David repo](https://github.com/pieterdavid/NanoGenScripts)
