@@ -20,24 +20,32 @@ def SlurmRunNano(path= None, outputDIR=None):
     config.inputParamsNames = ["gridpack_path","NanoGEN"]
     config.inputParams = []
     
-    # PATH_wheretolook ="/home/ucl/cp3/kjaffel/ZAPrivateProduction/genproductions/bin/MadGraph5_aMCatNLO/"
-    # PATH_wheretolook ="/home/ucl/cp3/kjaffel/ZAPrivateProduction/CMSSW_11_2_0_pre7/src/Configuration/NanoGenScripts/lxplus-ver2021.0316/BENCHMARKS/"
-    # PATH_wheretolook ="/home/ucl/cp3/kjaffel/ZAPrivateProduction/CMSSW_11_2_0_pre7/src/Configuration/NanoGenScripts/compare_bbHwidths/"
-    
     for gridpack_path in glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), path, "*_tarball.tar.xz")):
         config.inputParams.append([gridpack_path, "%s%s"%(gridpack_path.split('/')[-1].split('_slc7')[0], ".root")])
+        workDIR=os.path.dirname(os.path.abspath(__file__))
     config.payload = \
     """
+            if [[ "${NanoGEN}" == *"200p00_125p00"* ]]; then
+                eval suffix="lowmass_"
+            else
+                eval suffix=""
+            fi
+
             if [[ "${NanoGEN}" == *"bbH"* ]]; then
                 eval fragment="Hadronizer_TuneCP5_13TeV_aMCatNLO_2p_LHE_pythia8_cff.py"
+            elif [[ "${NanoGEN}" == *"AToZHTo2L2B"* ]]; then
+                eval fragment="Hadronizer_TuneCP5_13TeV_AToZHTo2L2B_${suffix}pythia8_PSweights_cff.py"
             else
-                eval fragment="Hadronizer_TuneCP5_13TeV_generic_LHE_pythia8_PSweights_cff.py"
+                eval fragment="Hadronizer_TuneCP5_13TeV_HToZATo2L2B_${suffix}pythia8_PSweights_cff.py"
             fi
-            cat python/${fragment}
+            pwd
             echo ${gridpack_path}
             echo ${NanoGEN}
             echo ${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}
-            
+            echo ${fragment}
+            echo "****************************"
+            cat ${workDIR}/python/${fragment}
+            echo "****************************"
             bash gridpackTolheToNanoGen.sh ${fragment} ${NanoGEN} ${gridpack_path}
     """
     submitWorker = SubmitWorker(config, submit=True, yes=True, debug=True, quiet=True)
