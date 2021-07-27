@@ -7,7 +7,7 @@ externalLHEProducer = cms.EDProducer("ExternalLHEProducer",
     scriptName = cms.FileInPath('GeneratorInterface/LHEInterface/data/run_generic_tarball_cvmfs.sh')
 )
 
-from Configuration.Generator.Pythia8CommonSettings_cfi import *
+#from Configuration.Generator.Pythia8CommonSettings_cfi import *
 from Configuration.Generator.MCTunes2017.PythiaCP5Settings_cfi import *
 from Configuration.Generator.PSweightsPythia.PythiaPSweightsSettings_cfi import *
 
@@ -18,16 +18,35 @@ generator = cms.EDFilter("Pythia8HadronizerFilter",
     pythiaHepMCVerbosity = cms.untracked.bool(False),
     comEnergy = cms.double(13000.),
     PythiaParameters = cms.PSet(
-        pythia8CommonSettingsBlock,
         pythia8CP5SettingsBlock,
         pythia8PSweightsSettingsBlock,
-        #processParameters = cms.vstring(
-        #    'Higgs:useBSM = on',# allow BSM Higgs production
-        #),
+        #pythia8CommonSettingsBlock = cms.PSet(
+        pythia8CommonSettings = cms.vstring(
+                'Tune:preferLHAPDF = 2',
+                'Main:timesAllowErrors = 10000',
+                'Check:epTolErr = 0.01',
+                'Beams:setProductionScalesFromLHEF = off',
+                'SLHA:minMassSM = 1000.',
+                'ParticleDecays:limitTau0 = on',
+                'ParticleDecays:tau0Max = 10',
+                'ParticleDecays:allowPhotonRadiation = off',
+        ),
+        processParameters = cms.vstring(
+            'Higgs:useBSM = on',# allow BSM Higgs production
+            '25:mayDecay = false',
+            '36:onMode = off' , # turn off all h3 decays
+            '36:onIfMatch = 35 23', # turn on only h3 to h2 Z 
+            '36:isResonance = true',
+            #'36:doForceWidth = on',
+            '35:onMode = off' , # turn off all h2 decays
+            '35:onIfAny = 5',   # turn on only h2 to b b~
+            '35:isResonance = true',
+            #'35:doForceWidth = on',
+        ),
         parameterSets = cms.vstring('pythia8CommonSettings',
                                     'pythia8CP5Settings',
                                     'pythia8PSweightsSettings',
-                                    #'processParameters'
+                                    'processParameters'
                                     )
     )
 )

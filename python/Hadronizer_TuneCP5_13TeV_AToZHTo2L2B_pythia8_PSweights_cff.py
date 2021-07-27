@@ -9,7 +9,6 @@ externalLHEProducer = cms.EDProducer("ExternalLHEProducer",
 
 from Configuration.Generator.Pythia8CommonSettings_cfi import *
 from Configuration.Generator.MCTunes2017.PythiaCP5Settings_cfi import *
-from Configuration.Generator.Pythia8aMCatNLOSettings_cfi import *
 from Configuration.Generator.PSweightsPythia.PythiaPSweightsSettings_cfi import *
 
 generator = cms.EDFilter("Pythia8HadronizerFilter",
@@ -19,19 +18,26 @@ generator = cms.EDFilter("Pythia8HadronizerFilter",
     pythiaHepMCVerbosity = cms.untracked.bool(False),
     comEnergy = cms.double(13000.),
     PythiaParameters = cms.PSet(
-        pythia8CommonSettingsBlock,
         pythia8CP5SettingsBlock,
-        pythia8aMCatNLOSettingsBlock,
         pythia8PSweightsSettingsBlock,
+        pythia8CommonSettingsBlock,
         processParameters = cms.vstring(
-            'TimeShower:nPartonsInBorn = 2', #number of coloured particles (before resonance decays) in born matrix element
+            'Higgs:useBSM = on',# allow BSM Higgs production
+            #'25:mayDecay = false',
+            '36:onMode = off' , # turn off all h3 decays
+            '36:onIfMatch = 35 23', # turn on only h3 to h2 Z 
+            '36:isResonance = true',
+            #'36:doForceWidth = on',
+            '35:onMode = off' , # turn off all h2 decays
+            '35:onIfAny = 5',   # turn on only h2 to b b~
+            '35:isResonance = true',
+            #'35:doForceWidth = on',
         ),
-    parameterSets = cms.vstring('pythia8CommonSettings',
-                                'pythia8CP5Settings',
-                                'pythia8aMCatNLOSettings',
-                                'pythia8PSweightsSettings',
-                                'processParameters',
-                                )
+        parameterSets = cms.vstring('pythia8CommonSettings',
+                                    'pythia8CP5Settings',
+                                    'pythia8PSweightsSettings',
+                                    'processParameters'
+                                    )
     )
 )
 ProductionFilterSequence = cms.Sequence(generator)
