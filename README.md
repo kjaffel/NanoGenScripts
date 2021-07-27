@@ -26,7 +26,11 @@ At this stage I am assuming that you manage to generate gridpacks stored by defa
 python slurmOverallgridpacks.py --path --output
 ```
 - ``-p``/``--path`` : path to `` _tarball.tar.xz`` gridpacks
-- ``-o``/``--output``:  output dir 
+- ``-o``/``--output``:  output dir by default will be tha same as the output
+- ``--decay_in:`` need to be ``madspin`` or ``pythia8`` accordingly the gen-fragment will change   
+```python
+scripts/mergeOutput.py --path slurm_dir 
+```
 ## LHE -> GEN:
 If you have lhe files:
 Go to folderName/Events/run_01. In there should be a file named unweighted_events.lhe.gz . To unzip it, use:
