@@ -16,10 +16,13 @@ def isValidRootFile(fname):
     f.Close()
 
 def domerge( mainOutputDir=None):
+    print( glob.glob(os.path.join(mainOutputDir, 'outputs', '*_pythia8')) )
     for smppath in glob.glob(os.path.join(mainOutputDir, 'outputs', '*_pythia8')):
         smpNm = smppath.split('/')[-1]
-        for slurmDIR in glob.glob(os.path.join(mainOutputDir, smpNm)):
-            targetFile   = os.path.join(smpNm,'.root')
+        print( smpNm)
+        print( glob.glob(os.path.join(mainOutputDir, 'outputs', smpNm)))
+        for slurmDIR in glob.glob(os.path.join(mainOutputDir, 'outputs', smpNm)):
+            targetFile   = os.path.join(mainOutputDir, 'outputs','%s.root'%smpNm)
             filesToMerge = glob.glob(os.path.join(slurmDIR, '*.root'))
         
             if os.path.exists(targetFile): # if existing target file exists and looks ok, skip
@@ -27,25 +30,12 @@ def domerge( mainOutputDir=None):
                 else: os.system('rm %s' % targetFile)
     
             for f in filesToMerge:
-            if not isValidRootFile(f):
-                print ('WARNING: something wrong with %s' % f)
+                if not isValidRootFile(f):
+                    print ('WARNING: something wrong with %s' % f)
         
             if len(filesToMerge)>100:
                 print ('A lot of files to merge, this might take some time...')
-                tempTargets = []
-                for i in range(0,10):
-                    tempTargetFile = targetFile.replace('.root', '-temp%s.root' % str(i))
-                    tempTargets.append(tempTargetFile)
-                    if os.path.exists(tempTargetFile): # if existing target file exists and looks ok, skip
-                        if isValidRootFile(tempTargetFile): continue
-                        else: os.system('rm %s' % tempTargetFile)
-                    tempFilesToMerge = [f for f in filesToMerge if ('%s.root' % str(i)) in f]
-                    print system('hadd %s %s' % (tempTargetFile, ' '.join(tempFilesToMerge)))
-                print system('hadd %s %s' % (targetFile, ' '.join(tempTargets)))
-                for i in tempTargets:
-                    system('rm %s' % i)
-            else:
-                print system('hadd %s %s' % (targetFile, ' '.join(filesToMerge)))
+            system('hadd %s %s' % (targetFile, ' '.join(filesToMerge)))
 
 if __name__ == '__main__':
     
