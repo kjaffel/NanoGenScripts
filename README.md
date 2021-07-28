@@ -1,6 +1,8 @@
 # ZANanoGEN:
 Parton-level physics analyses based on event samples produced by matrix-element generators are far from describing the reality of what is observed in any existing detector.
-    NanoGen is simply a way to produce NanoAOD with only the GEN-related branches. 
+
+NanoGen is simply a way to produce NanoAOD with only the GEN-related branches. 
+
 It is possible to produce NanoGen directly from a gridpack without the need for time consuming SIM and RECOsteps, which makes it convenient for GEN-level studies. It is also possible to produce NanoGen from GEN, AOD, or MINIAOD inputs if you would like to make a gen-only skim.
 
 The automatic building of NanoGen configurations with cmsDriver is supported in ``CMSSW_10_6_X for X >= 19``, and for ``CMSSW_11_2_X for X >= 0_pre7`` or greater (i.e., 11_3 and above). 
@@ -28,7 +30,7 @@ At this stage I am assuming that you manage to generate gridpacks stored by defa
 ```bash
 bash loadgridpacksfromlxplus.sh
 ```
-2. submit jobs to slurm: 
+2. Submit jobs to slurm: 
 ```python
 python slurmOverallgridpacks.py --path --output
 ```
