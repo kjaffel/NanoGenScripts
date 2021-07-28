@@ -5,6 +5,13 @@ import datetime
 import argparse
 from CP3SlurmUtils.Configuration import Configuration
 from CP3SlurmUtils.SubmitWorker import SubmitWorker
+import logging
+LOG_LEVEL = logging.DEBUG
+stream = logging.StreamHandler()
+stream.setLevel(LOG_LEVEL)
+logger = logging.getLogger("NANOGEN")
+logger.setLevel(LOG_LEVEL)
+logger.addHandler(stream)
 
 def SlurmRunNanoGEN(path= None, outputDIR=None, decay_in=None, idx=None):
     config = Configuration()
@@ -66,12 +73,19 @@ if __name__ == '__main__':
     current_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     parser.add_argument("-p", "--path"  , default=None, required=True, help="path to gridpacks")
     parser.add_argument("-o", "--output", default=None, help="output dir")
+    parser.add_argument("--nbrjobs"     , default=2,    type=int, help="Number of Jobs to be submitted to slurm ")
     parser.add_argument("--decay_in"    , default=None, required=True, choices=['pythia8', 'madspin'], help="mandatory as pythia8 fragment will be different according where the decay is specified")
     
     options = parser.parse_args()
     if options.output is None:
         options.output = options.path 
+
+    nbrjobs = options.nbrjobs
+    
+    sum_ = nbrjobs*2000 # if you want to change this value please go to: NanoGenScripts/gridpackTolheToNanoGen.sh 
+    logger.info(" Only {} jobs will be submitted per gridpack with total 2000 events per job".format( nbrjobs))
+    logger.info(" Total-Events = {} jobs * 2000 perjob = {} ".format( nbrjobs, sum_ ))
     
     random.seed(0)# You should only call random.seed(0) once in the program. By seeding every time you are reseting the pseudo random number generator and forcing it to produce the same number.
-    for i in range(10):
+    for i in range(nbrJobs):
         SlurmRunNanoGEN( path=options.path, outputDIR=options.output, decay_in=options.decay_in, idx=i)
