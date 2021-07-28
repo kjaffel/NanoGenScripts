@@ -16,11 +16,8 @@ def isValidRootFile(fname):
     f.Close()
 
 def domerge( mainOutputDir=None):
-    print( glob.glob(os.path.join(mainOutputDir, 'outputs', '*_pythia8')) )
     for smppath in glob.glob(os.path.join(mainOutputDir, 'outputs', '*_pythia8')):
         smpNm = smppath.split('/')[-1]
-        print( smpNm)
-        print( glob.glob(os.path.join(mainOutputDir, 'outputs', smpNm)))
         for slurmDIR in glob.glob(os.path.join(mainOutputDir, 'outputs', smpNm)):
             targetFile   = os.path.join(mainOutputDir, 'outputs','%s.root'%smpNm)
             filesToMerge = glob.glob(os.path.join(slurmDIR, '*.root'))
@@ -35,7 +32,7 @@ def domerge( mainOutputDir=None):
         
             if len(filesToMerge)>100:
                 print ('A lot of files to merge, this might take some time...')
-            system('hadd %s %s' % (targetFile, ' '.join(filesToMerge)))
+            print( system('hadd %s %s' % (targetFile, ' '.join(filesToMerge))) )
 
 if __name__ == '__main__':
     
