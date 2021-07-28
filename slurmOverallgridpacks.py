@@ -87,5 +87,5 @@ if __name__ == '__main__':
     logger.info(" Total-Events = {} jobs * 2000 perjob = {} ".format( nbrjobs, sum_ ))
     
     random.seed(0)# You should only call random.seed(0) once in the program. By seeding every time you are reseting the pseudo random number generator and forcing it to produce the same number.
-    for i in range(nbrJobs):
+    for i in range(nbrjobs):
         SlurmRunNanoGEN( path=options.path, outputDIR=options.output, decay_in=options.decay_in, idx=i)
