@@ -6,7 +6,7 @@ import argparse
 from CP3SlurmUtils.Configuration import Configuration
 from CP3SlurmUtils.SubmitWorker import SubmitWorker
 
-def SlurmRunNanoGEN(path= None, outputDIR=None, decay_in=None, idx=None, randomseed=None):
+def SlurmRunNanoGEN(path= None, outputDIR=None, decay_in=None, idx=None):
     config = Configuration()
     config.sbatch_partition = 'cp3'
     config.sbatch_qos = 'cp3'
@@ -21,7 +21,9 @@ def SlurmRunNanoGEN(path= None, outputDIR=None, decay_in=None, idx=None, randoms
     config.inputParamsNames = ["cmssw", "fragment", "gridpack_path","NanoGEN", "randomseed"]
     config.inputParams = []
     
-    for gridpack_path in glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), path, "*_tarball.tar.xz")):
+    for i, gridpack_path in enumerate(glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), path, "*_tarball.tar.xz"))):
+        
+        randomseed = random.randint(1, 999999999)
         
         dumpOutputs = os.path.join(config.stageoutDir, "outputs","%s"%gridpack_path.split('/')[-1].split('_slc7')[0])
         if not os.path.exists(dumpOutputs):
@@ -49,7 +51,7 @@ def SlurmRunNanoGEN(path= None, outputDIR=None, decay_in=None, idx=None, randoms
             echo " Gridpack Path      :" ${gridpack_path}
             echo " Output file        :" ${NanoGEN}
             echo " Slurm_JobID_TaskID :" ${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}
-            echo " Random seed        :" ${randomsee}
+            echo " Random seed        :" ${randomseed}
             echo " Gen-Fragment       :" ${fragment} 
             echo "**********************************************************************"
             cat  ${cmssw}/python/${fragment}
@@ -70,7 +72,6 @@ if __name__ == '__main__':
     if options.output is None:
         options.output = options.path 
     
+    random.seed(0)# You should only call random.seed(0) once in the program. By seeding every time you are reseting the pseudo random number generator and forcing it to produce the same number.
     for i in range(10):
-        random.seed(i)
-        randomseed = random.randint(25, 50)
-        SlurmRunNanoGEN( path=options.path, outputDIR=options.output, decay_in=options.decay_in, idx=i, randomseed=int(randomseed))
+        SlurmRunNanoGEN( path=options.path, outputDIR=options.output, decay_in=options.decay_in, idx=i)

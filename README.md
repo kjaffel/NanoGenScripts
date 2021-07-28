@@ -1,4 +1,10 @@
 # ZANanoGEN:
+Parton-level physics analyses based on event samples produced by matrix-element generators are far from describing the reality of what is observed in any existing detector.
+    NanoGen is simply a way to produce NanoAOD with only the GEN-related branches. 
+It is possible to produce NanoGen directly from a gridpack without the need for time consuming SIM and RECOsteps, which makes it convenient for GEN-level studies. It is also possible to produce NanoGen from GEN, AOD, or MINIAOD inputs if you would like to make a gen-only skim.
+
+The automatic building of NanoGen configurations with cmsDriver is supported in ``CMSSW_10_6_X for X >= 19``, and for ``CMSSW_11_2_X for X >= 0_pre7`` or greater (i.e., 11_3 and above). 
+
 ## Setup CMSSW area :
 To set up in a new CMSSW area:
 ```bash
@@ -16,20 +22,22 @@ mkdir -p Configuration
 git clone https://github.com/kjaffel/NanoGenScripts -o Configuration/NanoGenScripts
 scram b
 ```
-## gridpacks -> LHE -> GEN:[slurm]
+## gridpacks -> LHE -> GEN: [slurm submission]
 At this stage I am assuming that you manage to generate gridpacks stored by default in :`genproductions/bin/MadGraph5_aMCatNLO/`
-
+1. Save your gridpacks tarball some where : 
 ```bash
-./loadgridpacksfromlxplus.sh
+bash loadgridpacksfromlxplus.sh
 ```
+2. submit jobs to slurm: 
 ```python
 python slurmOverallgridpacks.py --path --output
 ```
 - ``-p``/``--path`` : path to `` _tarball.tar.xz`` gridpacks
 - ``-o``/``--output``:  output dir by default will be tha same as the output
 - ``--decay_in:`` need to be ``madspin`` or ``pythia8`` accordingly the gen-fragment will change   
+3. Merge your outputs : 
 ```python
-scripts/mergeOutput.py --path slurm_dir 
+python scripts/mergeOutput.py --path to_slurm_dir 
 ```
 ## LHE -> GEN:
 If you have lhe files:
