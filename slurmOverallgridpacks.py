@@ -85,6 +85,7 @@ if __name__ == '__main__':
     sum_ = nbrjobs*2000 # if you want to change this value please go to: NanoGenScripts/gridpackTolheToNanoGen.sh 
     logger.info(" Only {} jobs will be submitted per gridpack with total 2000 events per job".format( nbrjobs))
     logger.info(" Total-Events = {} jobs * 2000 perjob = {} ".format( nbrjobs, sum_ ))
+    logger.info(" if the gridpacks are @NLO. please considere 40% fraction of total events weight for bbH process. To compensate x factor of 5 ! ".format( nbrjobs, sum_ ))
     
     random.seed(0)# You should only call random.seed(0) once in the program. By seeding every time you are reseting the pseudo random number generator and forcing it to produce the same number.
     for i in range(nbrjobs):

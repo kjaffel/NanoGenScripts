@@ -36,7 +36,8 @@ python slurmOverallgridpacks.py --path --output
 ```
 - ``-p``/``--path`` : path to `` _tarball.tar.xz`` gridpacks
 - ``-o``/``--output``:  output dir by default will be tha same as the output
-- ``--decay_in:`` need to be ``madspin`` or ``pythia8`` accordingly the gen-fragment will change   
+- ``--decay_in``: need to be ``madspin`` or ``pythia8`` accordingly the gen-fragment will be changed.   
+- ``--nbrjobs`` : must be int, ``default = 2 ``
 3. Merge your outputs : 
 ```python
 python scripts/mergeOutput.py --path to_slurm_dir 
